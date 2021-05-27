@@ -63,6 +63,10 @@ public class RequestScope {
     }
   }
 
+  public List<Map<String, String>> getResources() {
+    return resources;
+  }
+
   public Map<String, String> getClusterIDs() {
     return ((Map<String, Map<String, String>>) scope.get("scope")).get("clusters");
   }

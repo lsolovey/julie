@@ -102,8 +102,14 @@ public class MDSApiClient {
 
   public void bindRequest(TopologyAclBinding binding) throws IOException {
 
+    // temporary hack to respect resources added under cluster-level role binding
+    // opened issue https://github.com/kafka-ops/julie/issues/285
+    boolean isClusterLevel =
+        binding.getResourceType() == (ResourceType.CLUSTER)
+            && binding.getScope().getResources().isEmpty();
+
     String url = "principals/" + binding.getPrincipal() + "/roles/" + binding.getOperation();
-    if (!binding.getResourceType().equals(ResourceType.CLUSTER)) {
+    if (!isClusterLevel) {
       url = url + "/bindings";
     }
 
@@ -111,7 +117,7 @@ public class MDSApiClient {
 
     try {
       String jsonEntity;
-      if (binding.getResourceType().equals(ResourceType.CLUSTER)) {
+      if (isClusterLevel) {
         jsonEntity = binding.getScope().clustersAsJson();
       } else {
         jsonEntity = binding.getScope().asJson();
