@@ -22,8 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.apache.kafka.common.resource.PatternType;
+import org.apache.kafka.common.resource.ResourceType;
 
 public class RBACBindingsBuilder implements BindingsBuilderProvider {
 
@@ -219,7 +219,10 @@ public class RBACBindingsBuilder implements BindingsBuilderProvider {
     return subjects.stream()
         .map(
             subject ->
-                apiClient.bind(principal, role).forSchemaSubject(subject, patternType).apply())
+                apiClient
+                    .bind(principal, role)
+                    .forSchemaSubject(subject, patternType)
+                    .apply(ResourceType.CLUSTER, "Subject:" + subject))
         .filter(Objects::nonNull)
         .collect(Collectors.toList());
   }

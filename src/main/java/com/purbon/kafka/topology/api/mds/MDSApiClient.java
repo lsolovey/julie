@@ -93,9 +93,17 @@ public class MDSApiClient {
   }
 
   public TopologyAclBinding bindClusterRole(String principal, String role, RequestScope scope) {
-    ResourceType resourceType = ResourceType.CLUSTER;
+    return bindClusterRole(principal, ResourceType.CLUSTER, "cluster", role, scope);
+  }
+
+  public TopologyAclBinding bindClusterRole(
+      String principal,
+      ResourceType resourceType,
+      String resourceName,
+      String role,
+      RequestScope scope) {
     TopologyAclBinding binding =
-        new TopologyAclBinding(resourceType, "cluster", "*", role, principal, "LITERAL");
+        new TopologyAclBinding(resourceType, resourceName, "*", role, principal, "LITERAL");
     binding.setScope(scope);
     return binding;
   }

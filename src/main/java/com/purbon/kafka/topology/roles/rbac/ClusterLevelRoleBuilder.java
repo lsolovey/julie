@@ -9,6 +9,7 @@ import com.purbon.kafka.topology.roles.TopologyAclBinding;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.kafka.common.resource.PatternType;
+import org.apache.kafka.common.resource.ResourceType;
 
 public class ClusterLevelRoleBuilder {
 
@@ -66,8 +67,11 @@ public class ClusterLevelRoleBuilder {
   }
 
   public TopologyAclBinding apply() {
+    return apply(ResourceType.CLUSTER, "cluster");
+  }
 
-    return client.bindClusterRole(principal, role, scope);
+  public TopologyAclBinding apply(ResourceType resourceType, String resourceName) {
+    return client.bindClusterRole(principal, resourceType, resourceName, role, scope);
   }
 
   public ClusterLevelRoleBuilder forKafka() {
